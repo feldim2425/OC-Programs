@@ -26,3 +26,29 @@ local client = websocket.create(callback, true);
 * ```text(string: message) ``` -- String message recieved
 * ```error(string: error_message) ``` -- Error occurred while reading message.
 * ```msg_unknown(frame: frame) ``` -- Unknown Frame recieved
+
+### API Limitations
+* The API can't handle continuous frames and will fire an ```error```-event after recieving a non final frame
+* The API can't recieve and send binary messages and will fire an ```msg_unknown```-event after recieving a frame with binary data.
+* The API will not check if the Handshake key is correct and might cause issues.
+
+### Example
+```
+local ws = require("websocket_client");
+local event = require("event");
+
+local cl = ws.create(function(event ,var1) print(event .. "->" .. var1) end);
+
+cl:connect("localhost", 12345, "/");
+
+while true do
+  local ev = {event.pull()};
+
+  if ev[1] == "interrupted" then
+    cl:disconnect();
+    return;
+  elseif ev[1] == "touch" then
+    cl:send("HI");
+  end
+end
+```
