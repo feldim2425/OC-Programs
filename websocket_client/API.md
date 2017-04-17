@@ -1,5 +1,9 @@
 # Websocket Client API
 
+API to connect to a Websocket Server.
+Requires a Internet Card.
+
+
 ### API-Methods/Functions
 * ``` websocket.create(function: callback, [boolean: autoTick]):client ``` -- Creates and returns a new client instance. ```callback``` will get called whenever a event accures. If ```autoTick``` is set to false you will have to call the ```update()``` method manually in order to recieve messages (default: true)
 * ``` client:connectURL(string: url) ``` -- Connects to a specific server. Error when it can't connect. Example URL: "ws://example.com/path/to/endoint"
@@ -52,3 +56,7 @@ while true do
   end
 end
 ```
+
+### Install
+To install the library just run this command:
+```pastebin run xnXssAtH```
