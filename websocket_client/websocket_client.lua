@@ -1,7 +1,7 @@
-local layer = require("ws_component_layer");
-local tools = require("ws_tools");
+local layer = require("websocket/ws_component_layer");
+local tools = require("websocket/ws_tools");
 local event = require("event");
--- t = dofile("/home/websocket_client.lua");
+
 local Wsclient = {};
 Wsclient.__index = Wsclient;
 
