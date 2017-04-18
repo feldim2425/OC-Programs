@@ -1,7 +1,7 @@
 # Websocket Client API
 
 API to connect to a Websocket Server.
-Requires a Internet Card.
+Requires a Internet Card and Lua 5.3.
 
 
 ### API-Methods/Functions
