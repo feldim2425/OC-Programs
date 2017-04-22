@@ -138,6 +138,7 @@ function Wsclient:disconnect()
   layer.sleep(0.5);
   self._con.read();
   endConnection(self);
+  return true;
 end
 
 function Wsclient:send(message)

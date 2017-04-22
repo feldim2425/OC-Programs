@@ -8,7 +8,7 @@ Requires a Internet Card and Lua 5.3.
 * ``` websocket.create(function: callback, [boolean: autoTick]):client ``` -- Creates and returns a new client instance. ```callback``` will get called whenever a event accures. If ```autoTick``` is set to false you will have to call the ```update()``` method manually in order to recieve messages (default: true)
 * ``` client:connectURL(string: url) ``` -- Connects to a specific server. Error when it can't connect. Example URL: "ws://example.com/path/to/endoint"
 * ``` client:connect(host,port,path) ``` -- Connects to a specific server. Error when it can't connect. The base path is "/" and can't be a empty string!
-* ``` client:disconnect()``` -- Disconnects the current connection. Error when there is no connection.
+* ``` client:disconnect():boolean``` -- Disconnects the current connection. false if the client was not connected.
 * ``` client:update()``` -- Check the input buffer. Will get called automatically by a timer when ```autoTick``` was set to true.
 * ``` client:send(string: message) ``` -- Send a messege to the connected server
 * ``` client:hasConnection():boolean ``` -- Returns true if there is a open TCP Socket connection to the server.
