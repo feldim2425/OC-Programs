@@ -100,7 +100,7 @@ function Wsclient:update()
   frame = tools.readFrame(tools.toByteArray(data));
   
   if frame.opcode == 0x08 then -- close request
-    self._callback('close_request');
+    self._callback('close_request', tools.fromByteArray(frame.dat));
     self:disconnect();
   elseif frame.opcode == 0x01 then -- text message
     self._callback('text', tools.fromByteArray(frame.dat));

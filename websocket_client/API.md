@@ -26,7 +26,7 @@ local client = websocket.create(callback, true);
 
 #### Events
 * ```handshake_error(string: error_message)``` -- Handshake with Server failed. The connection gets closed before this event gets fired
-* ```close_request()``` -- Server has requested to close the connection. The connection gets closed after this event gets fired
+* ```close_request(string: reason)``` -- Server has requested to close the connection. The connection gets closed after this event gets fired. ```reason``` can be a empty string if no reason is given.
 * ```text(string: message) ``` -- String message recieved
 * ```error(string: error_message) ``` -- Error occurred while reading message.
 * ```msg_unknown(frame: frame) ``` -- Unknown Frame recieved
