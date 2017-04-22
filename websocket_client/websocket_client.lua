@@ -86,31 +86,42 @@ function Wsclient:update()
     return;
   end
   
+  fmsg = tools.toByteArray(data);
+  
   if not self._connected then
     stat, err = tools.verifyUpgrade(self._key, data);
     if stat then
       self._connected = true;
+      if err then
+        fmsg = err;
+      else
+        return;
+      end
     else
       endConnection(self)
       self._callback('handshake_error', err);
+      return;
     end
-    return;
+   
   end
   
-  frame = tools.readFrame(tools.toByteArray(data));
+  while fmsg ~= nil do
   
-  if frame.opcode == 0x08 then -- close request
-    self._callback('close_request', tools.fromByteArray(frame.dat));
-    self:disconnect();
-  elseif frame.opcode == 0x01 then -- text message
-    self._callback('text', tools.fromByteArray(frame.dat));
-  elseif frame.opcode == 0x09 then -- ping
-     self._con.write(tools.fromByteArray(tools.makeFrame({fin=1, opcode=0x0a, mask=tools.generateMask(), len=frame.len, dat = frame.dat})));
-  else
-    if not frame.fin then
-      self._callback('error', "Cannot handle continuous messages");
+    frame, fmsg = tools.readFrame(fmsg);
+  
+    if frame.opcode == 0x08 then -- close request
+      self._callback('close_request', tools.fromByteArray(frame.dat));
+      self:disconnect();
+    elseif frame.opcode == 0x01 then -- text message
+      self._callback('text', tools.fromByteArray(frame.dat));
+    elseif frame.opcode == 0x09 then -- ping
+       self._con.write(tools.fromByteArray(tools.makeFrame({fin=1, opcode=0x0a, mask=tools.generateMask(), len=frame.len, dat = frame.dat})));
     else
-      self._callback('msg_unknown', frame);
+      if not frame.fin then
+        self._callback('error', "Cannot handle continuous messages");
+      else
+        self._callback('msg_unknown', frame);
+      end
     end
   end
   
@@ -119,7 +130,7 @@ end
 --disconnect
 function Wsclient:disconnect()
   if not self:hasConnection() then
-    error("Not Connected!");
+    return false;
   end
   
   self._con.write(tools.fromByteArray(tools.makeFrame({fin=1, opcode=8, mask=0xffffffff, len=0, dat = {}})));
@@ -130,7 +141,9 @@ function Wsclient:disconnect()
 end
 
 function Wsclient:send(message)
-  self._con.write(tools.fromByteArray(tools.makeFrame({fin=1, opcode=1, mask=tools.generateMask(), len=#message, dat = tools.toByteArray(message)})));
+  if self:isConnected() then
+    self._con.write(tools.fromByteArray(tools.makeFrame({fin=1, opcode=1, mask=tools.generateMask(), len=#message, dat = tools.toByteArray(message)})));
+  end
 end
 
 --is connected

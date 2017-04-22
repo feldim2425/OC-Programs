@@ -20,9 +20,11 @@ end
 ws_tool.verifyUpgrade = function(key,message)
   head = true;
   data = {};
-  for line in message:gmatch("[^\r\n]*") do
+  off = 0;
+  for line in message:gmatch("[^\r\n]*\r\n") do
+    off = off + line:len();
     if head then
-      if line=="HTTP/1.1 101 Switching Protocols" then
+      if line:find("101") then
         head = false;
       else
         return false, "Wrong HTTP-Code";
@@ -35,7 +37,7 @@ ws_tool.verifyUpgrade = function(key,message)
     end
   end
   
-  if data["Upgrade"] ~= "websocket" or data["Connection"] ~= "Upgrade" then
+  if data["Upgrade"] ~= "websocket" or data["Connection"]:lower() ~= "upgrade" then
     return false, "Wrong Handshake. Server doesn't support Websocket";
   end
   
@@ -43,7 +45,13 @@ ws_tool.verifyUpgrade = function(key,message)
     return false, "Server doesn't support \"chat\"-protocol";
   end
   
-  return true;
+  remainLen = message:len() - off;
+  remain = nil;
+  if remainLen >= 2 then
+    remain = ws_tool.toByteArray(message:sub(off+1));
+  end
+  
+  return true, remain;
 end
 
 ws_tool.readFrame = function(data)
@@ -102,7 +110,18 @@ ws_tool.readFrame = function(data)
     table.insert(frame.dat, data[offset+i] ~ msk[((i-1)%4)+1]);
   end
   
-  return frame;
+  offset = offset + frame.len;
+  remainLen = #data - offset;
+  remain = nil;
+  
+  if remainLen >= 2 then
+	remain = {};
+	for i=0, remainLen do
+	  remain[i] = data[i+offset];
+	end
+  end
+  
+  return frame, remain;
 end
 
 ws_tool.makeFrame = function(data)
