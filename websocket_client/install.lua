@@ -54,7 +54,7 @@ term.setCursor(1,termY)
 
 if termY+5 >= termH then
   termY = termH-5
-  for i=0,5 do
+  for i=1,5 do
     print("")
   end
 end
