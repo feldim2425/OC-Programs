@@ -13,8 +13,9 @@ local fs = require("filesystem")
 local shell = require("shell")
 local term = require("term")
 
-if not component.internet then
-  error("Need a internet card!")
+if not component.isAvailable("internet") then
+  print("Need an internet card!")
+  return
 end
 local internet = require("internet")
 
