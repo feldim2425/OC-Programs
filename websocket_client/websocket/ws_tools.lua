@@ -226,8 +226,13 @@ ws_tool.parseUrl = function(url)
     error("URL-Malformed");
   end
 	
-  if prot ~= "ws://" then
+  if prot ~= "ws://" and prot ~= "wss://" then
     error("Wrong URI-Protocol! Expected \"ws://\" and got \""..prot.."\"");
+  end
+  
+  tls = false;
+  if prot == "wss://" then
+	tls = true;
   end
   
   if port:len() == 0 then
@@ -238,7 +243,7 @@ ws_tool.parseUrl = function(url)
     path = nil;
   end
   
-  return host, port, path;
+  return host, port, path, tls;
 end
 
 return ws_tool;

@@ -1,6 +1,5 @@
 local layer = require("websocket/ws_component_layer");
 local tools = require("websocket/ws_tools");
-local event = require("event");
 
 local Wsclient = {};
 Wsclient.__index = Wsclient;
@@ -14,7 +13,7 @@ local function endConnection(client)
   
   --Cancel Timer [OpenComputers]
   if client._timer then
-    event.cancel(client._timer);
+	layer.stopTimer(client._timer);
     client._timer = nil
   end
 end
@@ -39,12 +38,12 @@ end
 --connect to given url
 --Example URL: "ws://example.com/any/path"
 function Wsclient:connectURL(url)
-    host,port,path = tools.parseUrl(url);
-    self:connect(host, tonumber(port), path);
+    host,port,path,tls = tools.parseUrl(url);
+    self:connect(host, tonumber(port), path, tls);
 end
 
 --connect to server
-function Wsclient:connect(host,port,path)
+function Wsclient:connect(host,port,path,tls)
   if self:hasConnection() then
     error("Already Connected!");
   end
@@ -52,8 +51,9 @@ function Wsclient:connect(host,port,path)
   self._host = host;
   self._port = port or 80;
   self._path = path or "/";
+  self._tls = tls or false;
 
-  self._con = layer.open(self._host, self._port);
+  self._con = layer.open(self._host, self._port, self._tls);
   if not self._con then
     error("Unknown error while connecting. Connection = nil");
   end
@@ -63,7 +63,7 @@ function Wsclient:connect(host,port,path)
   
   --Start Timer [OpenComputers]
   if self._autoUpdate == nil or self._autoUpdate then
-    self._timer = event.timer(0.1, function() self:update() end, math.huge);
+    self._timer = layer.startTimer(function() self:update() end, 0.1)
   end
   
 end
