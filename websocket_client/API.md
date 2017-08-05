@@ -7,7 +7,7 @@ Requires a Internet Card and Lua 5.3.
 ### API-Methods/Functions
 * ``` websocket.create(function: callback, [boolean: autoTick]):client ``` -- Creates and returns a new client instance. ```callback``` will get called whenever a event accures. If ```autoTick``` is set to false you will have to call the ```update()``` method manually in order to recieve messages (default: true)
 * ``` client:connectURL(string: url) ``` -- Connects to a specific server. Error when it can't connect. Example URL: "ws://example.com/path/to/endoint"
-* ``` client:connect(host,port,path) ``` -- Connects to a specific server. Error when it can't connect. The base path is "/" and can't be a empty string!
+* ``` client:connect(host,port,path,tls) ``` -- Connects to a specific server. If tls is set to true (default: false) the api will use "Fingercomp-libtls" to open a tls connection. Error when it can't connect. The base path is "/" and cannot be empty!
 * ``` client:disconnect():boolean``` -- Disconnects the current connection. false if the client was not connected.
 * ``` client:update()``` -- Check the input buffer. Will get called automatically by a timer when ```autoTick``` was set to true.
 * ``` client:send(string: message) ``` -- Send a messege to the connected server
@@ -44,7 +44,7 @@ local event = require("event");
 
 local cl = ws.create(function(event ,var1) print(event .. "->" .. var1) end);
 
-cl:connect("localhost", 12345, "/");
+cl:connect("localhost", 12345, "/", false);
 
 while true do
   local ev = {event.pull()};
