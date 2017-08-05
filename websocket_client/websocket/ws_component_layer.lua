@@ -24,7 +24,7 @@ comp_layer.startTimer = function(callback, delay)
 end
 
 comp_layer.stopTimer = function(handle)
-	return event.timer(0.1, callback, math.huge);
+	return event.cancel(handle);
 end
 
 comp_layer.open = function(address, port, secure)
