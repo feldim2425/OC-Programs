@@ -35,7 +35,6 @@ local client = websocket.create(callback, true);
 * The API can't handle continuous frames and will fire an ```error```-event after recieving a non final frame (Support maybe in later versions)
 * The API can't recieve and send binary messages and will fire an ```msg_unknown```-event after recieving a frame with binary data (Support maybe later version)
 * The API will NOT check if the Handshake key is correct and might cause issues (very very very small chance).
-* Secure Websockets (wss://) are NOT supported due to the limited CPU power and the complexity of TLS it is also unlikely that support will follow.
 
 ### Example
 ```
