@@ -37,7 +37,7 @@ ws_tool.verifyUpgrade = function(key,message)
     end
   end
   
-  if data["Upgrade"] ~= "websocket" or data["Connection"]:lower() ~= "upgrade" then
+  if data["Upgrade"]:lower() ~= "websocket" or data["Connection"]:lower() ~= "upgrade" then
     return false, "Wrong Handshake. Server doesn't support Websocket";
   end
   
