@@ -1,7 +1,15 @@
 local ws_tool = {};
 
+local io = require("io");
+
+-- Generate randomised 16 byte value as required by RFC 6455 - https://tools.ietf.org/html/rfc6455
 ws_tool.generate_key = function()
-	return ws_tool.toBase64(tostring(math.random(9999999999)));
+  local random = io.open("/dev/random", "rb");
+  local randomBytes = random:read(16);
+
+  random:close();
+
+  return ws_tool.toBase64(randomBytes);
 end
 
 ws_tool.upgrade = function(host,uri,port)
